@@ -28,6 +28,7 @@ vector<Token> Tokenizer::tokenize() {
             isTag = true;
                 
             Token t(el, TokenType::Text);
+            t.index = index;
             data.push_back(t);
             el.clear();
 
@@ -44,7 +45,8 @@ vector<Token> Tokenizer::tokenize() {
             if(character == '>') {
                 
                 Token t(el, TokenType::Element);
-                
+                t.index = index;
+
                 if(isVoid) {
 
                     t.start = true;
@@ -88,7 +90,10 @@ vector<Token> Tokenizer::tokenize() {
         
     }
     
-    data.push_back(Token(el, TokenType::Text));
+    Token t(el, TokenType::Text);
+    t.index = index;
+
+    data.push_back(t);
     el.clear();
 
     return data;

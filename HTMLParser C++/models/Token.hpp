@@ -22,6 +22,9 @@ public:
     TokenType token;
     bool start = false;
     bool end = false;
+    bool isVoid = false;
+    int index;
+    
 };
 
 #endif /* Token_hpp */

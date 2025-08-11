@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "tokenizer/Tokenizer.hpp"
+#include "overloads/operators.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main(int argc, const char * argv[]) {
     vector<Token> tokens = tokenizer.tokenize();
     
     for (Token token : tokens) {
-        cout << token.name << " : " << (token.token == TokenType::Text ? "Text" : "Element") << " : " << token.start << token.end << endl;
+        cout << token << endl;
     }
         
     return 0;
