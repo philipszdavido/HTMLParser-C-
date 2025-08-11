@@ -16,14 +16,23 @@ string tokenTypeToString(const Token& token) {
     return (token.token == TokenType::Text ? "Text" : "Element");
 }
 
+ostream& operator<<(ostream& os, const vector<AttributeToken>& attrs) {
+    
+    for(AttributeToken t : attrs) {
+        cout << "'" << t.key << "' : '" << t.value << "'" << endl;
+    }
+    
+    return os;
+}
+
 ostream& operator<<(ostream& os, const Token& token) {
     os << "Token(name=\"" << token.name
     << "\", token=" << tokenTypeToString(token)
     << ", start=" << std::boolalpha << token.start
     << ", end=" << std::boolalpha << token.end
     << ", index=" << token.index
-    << ", void=" << boolalpha << token.isVoid
-    << ")";
+    << ", void=" << std::boolalpha << token.isVoid
+    << ", attributes=[\n" << token.attributes << "])";
     return os;
 }
 

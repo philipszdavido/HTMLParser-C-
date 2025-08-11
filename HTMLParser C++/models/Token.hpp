@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "TokenType.h"
+#include "../token_attribute_parser/AttributeToken.hpp"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ public:
     bool end = false;
     bool isVoid = false;
     int index;
+    vector<AttributeToken> attributes;
     
 };
 

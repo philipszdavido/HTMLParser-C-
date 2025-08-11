@@ -6,6 +6,7 @@
 //
 
 #include "Tokenizer.hpp"
+#include "../token_attribute_parser/AttributeParser.hpp"
 
 vector<Token> Tokenizer::tokenize() {
     
@@ -14,12 +15,14 @@ vector<Token> Tokenizer::tokenize() {
     bool isTag = false;
     bool endTag = false;
     bool isVoid = false;
+    bool collectAttribute = false;
+    string attribute;
     
     string el;
     
     cout << html << endl;
     
-    for(unsigned char character : html) {
+    for(const char& character : html) {
         
         index++;
         
@@ -38,15 +41,48 @@ vector<Token> Tokenizer::tokenize() {
         
         if (isTag) {
             
+            if (!collectAttribute) {
+                if(character == ' ') {
+                    // we collect attributes
+                    collectAttribute = true;
+                    continue;
+                }
+            }
+                        
             if (character == '/' && nextChar() == '>') {
                 isVoid = true;
+                collectAttribute = false;
+
                 continue;
             }
             
+            if (collectAttribute) {
+                
+                attribute += character;
+                
+                if(nextChar() == '>') {
+                    collectAttribute = false;
+                }
+                
+                continue;
+                
+            }
+
+            
             if(character == '>') {
+                
                 
                 Token token(el, TokenType::Element);
                 token.index = index;
+
+                
+                AttributeParser attributeParser;
+                const string& attr = attribute;
+                vector<AttributeToken> attributes = attributeParser.parseAttribute(attr);
+
+                attribute = "";
+
+                token.attributes = attributes;
 
                 if(isVoid) {
 
