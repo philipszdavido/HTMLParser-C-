@@ -6,9 +6,22 @@
 //
 
 #include <iostream>
+#include "tokenizer/Tokenizer.hpp"
+
+using namespace std;
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+
+    const string html = "<div>Name: <span>Chi</span></div><img />Ha";
+
+    Tokenizer tokenizer(html);
+
+    vector<Token> tokens = tokenizer.tokenize();
+    
+    for (Token token : tokens) {
+        cout << token.name << " : " << (token.token == TokenType::Text ? "Text" : "Element") << " : " << token.start << token.end << endl;
+    }
+        
     return 0;
+    
 }
