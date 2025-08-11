@@ -27,12 +27,13 @@ vector<Token> Tokenizer::tokenize() {
             
             isTag = true;
                 
-            Token t(el, TokenType::Text);
-            t.index = index;
-            data.push_back(t);
+            Token token(el, TokenType::Text);
+            token.index = index;
+            data.push_back(token);
             el.clear();
 
             continue;
+            
         }
         
         if (isTag) {
@@ -44,25 +45,26 @@ vector<Token> Tokenizer::tokenize() {
             
             if(character == '>') {
                 
-                Token t(el, TokenType::Element);
-                t.index = index;
+                Token token(el, TokenType::Element);
+                token.index = index;
 
                 if(isVoid) {
 
-                    t.start = true;
-                    t.end = true;
+                    token.isVoid = true;
+                    token.start = true;
+                    token.end = true;
                     
                 } else {
-                    
+                                        
                     if (endTag) {
-                        t.end = true;
+                        token.end = true;
                     } else {
-                        t.start = true;
+                        token.start = true;
                     }
                     
                 }
 
-                data.push_back(t);
+                data.push_back(token);
                 el.clear();
                 
                 isTag = false;
@@ -90,10 +92,10 @@ vector<Token> Tokenizer::tokenize() {
         
     }
     
-    Token t(el, TokenType::Text);
-    t.index = index;
+    Token token(el, TokenType::Text);
+    token.index = index;
 
-    data.push_back(t);
+    data.push_back(token);
     el.clear();
 
     return data;

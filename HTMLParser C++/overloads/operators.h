@@ -22,6 +22,7 @@ ostream& operator<<(ostream& os, const Token& token) {
     << ", start=" << std::boolalpha << token.start
     << ", end=" << std::boolalpha << token.end
     << ", index=" << token.index
+    << ", void=" << boolalpha << token.isVoid
     << ")";
     return os;
 }
