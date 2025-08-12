@@ -48,7 +48,7 @@ int main(int argc, const char * argv[]) {
 
     vector<Token> tokens = tokenizer.tokenize();
     
-    HTMLParser h(html);
+    HTMLParser h;
     vector<Node> nodes = h.parse(tokens);
         
     for (Node node : nodes) {
