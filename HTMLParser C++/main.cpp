@@ -13,19 +13,6 @@
 
 using namespace std;
 
-void printToken(Token& token) {
-        cout << "Token(name=\"" << token.name
-        << "\", token=" << (token.token == TokenType::Element ? "Element" : "Text")
-        << ", start=" << std::boolalpha << token.start
-        << ", end=" << std::boolalpha << token.end
-        << ", index=" << token.index
-        << ", void=" << std::boolalpha << token.isVoid
-    << ", endStartTagIndex=" << token.endStartTagIndex
-    << endl;
-        // << ", attributes=[\n" << token.attributes << "])";
-
-}
-
 void printNode(const Node& node, int depth = 0) {
     // Indent based on depth
     for (int i = 0; i < depth; i++) {
@@ -63,9 +50,10 @@ int main(int argc, const char * argv[]) {
     
     HTMLParser h(html);
     vector<Node> nodes = h.parse(tokens);
-    
-    for (Node t : nodes) {
-        printNode(t);
+        
+    for (Node node : nodes) {
+        // printNode(t);
+        cout << node << endl;
     }
 
     
