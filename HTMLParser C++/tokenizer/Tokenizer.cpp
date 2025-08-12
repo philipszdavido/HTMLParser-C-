@@ -16,8 +16,10 @@ vector<Token> Tokenizer::tokenize() {
     bool endTag = false;
     bool isVoid = false;
     bool collectAttribute = false;
-    string attribute;
     
+    int endStartTagIndex = -1;
+    
+    string attribute;
     string el;
     
     cout << html << endl;
@@ -74,7 +76,6 @@ vector<Token> Tokenizer::tokenize() {
                 
                 Token token(el, TokenType::Element);
                 token.index = index;
-
                 
                 AttributeParser attributeParser;
                 const string& attr = attribute;
@@ -93,9 +94,19 @@ vector<Token> Tokenizer::tokenize() {
                 } else {
                                         
                     if (endTag) {
+                        
                         token.end = true;
+                        
+                        if(endStartTagIndex != -1) {
+                            token.endStartTagIndex = endStartTagIndex;
+                        }
+                        
+                        endStartTagIndex = -1;
+                        
                     } else {
+                        
                         token.start = true;
+                        
                     }
                     
                 }
@@ -114,6 +125,22 @@ vector<Token> Tokenizer::tokenize() {
             if (character == '/' && prevChar() == '<') {
                 
                 endTag = true;
+
+                // for (size_t i = (data.size() - 1); i > 0 ; --i) {
+                for (int i = static_cast<int>(data.size()) - 1; i >= 0; --i) {
+                    
+                    const Token c = data[i];
+
+                    //cout << c.name << " : " << el << endl;
+
+                    if(c.name == el ) {
+
+                        endStartTagIndex = c.index; // static_cast<int>(i);
+                        break;
+                        
+                    }
+                    
+                }
                 
             } else {
                 

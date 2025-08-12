@@ -26,6 +26,7 @@ public:
     bool isVoid = false;
     int index;
     vector<AttributeToken> attributes;
+    int endStartTagIndex = -1;
     
 };
 
