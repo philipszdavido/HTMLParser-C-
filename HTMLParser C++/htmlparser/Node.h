@@ -23,7 +23,7 @@ public:
     NodeType nodeType;
     const string textContent;
     vector<Node> children;
-    
+    vector<AttributeToken> attributes;
 };
 
 #endif /* Node_h */

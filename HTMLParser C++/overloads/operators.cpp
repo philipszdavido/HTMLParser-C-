@@ -27,16 +27,17 @@ ostream& operator<<(ostream& os, const vector<AttributeToken>& attrs) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Node& node) {
-
+    
     os << "Node: " << node.name
-         << " | Type: " << (node.nodeType == NodeType::Element ? "Element" : "Text")
-         << " | Text: \"" << node.textContent << "\""
-         << endl;
-
+    << " | Type: " << (node.nodeType == NodeType::Element ? "Element" : "Text")
+    << " | Text: \"" << node.textContent << "\""
+    << " | Attributes: \"" << node.attributes << "\""
+    << endl;
+    
     for (const auto& child : node.children) {
         os << child << endl;
     }
-
+    
     return os;
 }
 
@@ -50,4 +51,22 @@ ostream& operator<<(ostream& os, const Token& token) {
     << ", endStartTagIndex=" << token.endStartTagIndex
     << ", attributes=[\n" << token.attributes << "])";
     return os;
+}
+
+void printNode(const Node& node, int depth = 0) {
+    // Indent based on depth
+    for (int i = 0; i < depth; i++) {
+        cout << "  ";
+    }
+
+    // Print node info
+    cout << "Node: " << node.name
+         << " | Type: " << (node.nodeType == NodeType::Element ? "Element" : "Text")
+         << " | Text: \"" << node.textContent << "\""
+         << endl;
+
+    // Print children
+    for (const auto& child : node.children) {
+        printNode(child, depth + 1);
+    }
 }

@@ -28,7 +28,9 @@ vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
             
             if(token.isVoid) {
                 
-                nodes.push_back(Node(token.name, NodeType::Element, ""));
+                Node voidElement = Node(token.name, NodeType::Element, "");
+                voidElement.attributes = token.attributes;
+                nodes.push_back(voidElement);
                 continue;
                 
             }
@@ -36,6 +38,7 @@ vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
             // search if element has children
             const vector<Token>& children = getTokenChildren(tokens, token.name, i + 1);
             Node node = Node(token.name, NodeType::Element, "");
+            node.attributes = token.attributes;
             
             node.children = parse(children);
             

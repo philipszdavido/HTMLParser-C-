@@ -13,28 +13,10 @@
 
 using namespace std;
 
-void printNode(const Node& node, int depth = 0) {
-    // Indent based on depth
-    for (int i = 0; i < depth; i++) {
-        cout << "  ";
-    }
-
-    // Print node info
-    cout << "Node: " << node.name
-         << " | Type: " << (node.nodeType == NodeType::Element ? "Element" : "Text")
-         << " | Text: \"" << node.textContent << "\""
-         << endl;
-
-    // Print children
-    for (const auto& child : node.children) {
-        printNode(child, depth + 1);
-    }
-}
-
 int main(int argc, const char * argv[]) {
 
-    const string html = "<div class='main header'>Name: <span>Chi</span></div><img />Ha";
-    std::string _html = R"(
+    const string _html = "<div class='main header'>Name: <span>Chi</span></div><img />Ha";
+    std::string html = R"(
             <html>
                 <head><title>Hello</title></head>
                 <body>
@@ -52,7 +34,6 @@ int main(int argc, const char * argv[]) {
     vector<Node> nodes = h.parse(tokens);
         
     for (Node node : nodes) {
-        // printNode(t);
         cout << node << endl;
     }
 

@@ -20,5 +20,6 @@ std::string tokenTypeToString(const Token& token);
 std::ostream& operator<<(std::ostream& os, const std::vector<AttributeToken>& attrs);
 std::ostream& operator<<(std::ostream& os, const Token& token);
 std::ostream& operator<<(std::ostream& os, const Node& node);
+void printNode(const Node& node, int depth = 0);
 
 #endif /* operators_h */
