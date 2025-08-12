@@ -22,7 +22,7 @@ public:
     const string name;
     NodeType nodeType;
     const string textContent;
-    const vector<Node> children;
+    vector<Node> children;
     
 };
 

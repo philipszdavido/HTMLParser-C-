@@ -126,21 +126,18 @@ vector<Token> Tokenizer::tokenize() {
                 
                 endTag = true;
 
-                // for (size_t i = (data.size() - 1); i > 0 ; --i) {
-                for (int i = static_cast<int>(data.size()) - 1; i >= 0; --i) {
-                    
-                    const Token c = data[i];
-
-                    //cout << c.name << " : " << el << endl;
-
-                    if(c.name == el ) {
-
-                        endStartTagIndex = c.index; // static_cast<int>(i);
-                        break;
-                        
-                    }
-                    
-                }
+//                for (int i = static_cast<int>(data.size()) - 1; i >= 0; --i) {
+//                    
+//                    const Token c = data[i];
+//
+//                    if(c.name == el ) {
+//
+//                        endStartTagIndex = c.index;
+//                        break;
+//                        
+//                    }
+//                    
+//                }
                 
             } else {
                 

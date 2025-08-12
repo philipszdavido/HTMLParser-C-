@@ -19,12 +19,12 @@ class HTMLParser {
     
 public:
     HTMLParser(const string& htmlString): html(htmlString) {};
-    vector<Node> parse();
-    vector<Token> getTokenChildren(vector<Token> tokens, const string& name, int index);
+    vector<Node> parse(const vector<Token>& tokens);
     
 private:
     const string& html;
-    
+    const vector<Token> getTokenChildren(const vector<Token>& tokens, const string& name, int index);
+
 };
 
 #endif /* htmlparser_hpp */

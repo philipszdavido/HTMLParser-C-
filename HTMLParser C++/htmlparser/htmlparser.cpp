@@ -12,11 +12,8 @@
 
 using namespace std;
 
-vector<Node> HTMLParser::parse() {
-    
-    Tokenizer tokenizer(html);
-    vector<Token> tokens = tokenizer.tokenize();
-    
+vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
+        
     vector<Node> nodes;
     
     for (int i = 0; i < tokens.size(); ++i) {
@@ -32,26 +29,29 @@ vector<Node> HTMLParser::parse() {
             if(token.isVoid) {
                 
                 nodes.push_back(Node(token.name, NodeType::Element, ""));
+                continue;
                 
             }
             
             // search if element has children
-            vector<Token> children = getTokenChildren(tokens, token.name, i + 1);
+            const vector<Token>& children = getTokenChildren(tokens, token.name, i + 1);
+            Node node = Node(token.name, NodeType::Element, "");
+            
+            node.children = parse(children);
+            
+            nodes.push_back(node);
+            
+            i = (i + static_cast<int>(children.size()) + 1);
 
-            for (Token t : children) {
-                cout << t << endl;
-            }
-            
-            
         }
         
     }
-    
+
     return nodes;
     
 }
 
-vector<Token> HTMLParser::getTokenChildren(vector<Token> tokens, const string& name, int index) {
+const vector<Token> HTMLParser::getTokenChildren(const vector<Token>& tokens, const string& name, int index) {
 
     int seen = 0;
     vector<Token> children;
@@ -62,6 +62,10 @@ vector<Token> HTMLParser::getTokenChildren(vector<Token> tokens, const string& n
         
         if(token.name == name) {
             
+            if(seen == 0 && token.end) {
+                break;
+            }
+
             if(token.start) {
                 seen++;
             }
@@ -69,18 +73,13 @@ vector<Token> HTMLParser::getTokenChildren(vector<Token> tokens, const string& n
             if (token.end) {
                 seen--;
             }
-            
-            if(seen == 0) {
-                break;
-            }
-            
+                        
         }
         
         children.push_back(token);
-        
-        
+                
     }
-    
+
     return children;
     
 }
