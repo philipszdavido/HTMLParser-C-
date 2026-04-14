@@ -27,6 +27,10 @@ string tokenTypeToString(const Token& token) {
         return "Comment";
     }
     
+    if (token.token == TokenType::DocType) {
+        return "DocType";
+    }
+
     return "Unknown";
     
 }
@@ -53,6 +57,10 @@ string nodeType(NodeType nodeType) {
         return "Comment";
     }
     
+    if (nodeType == NodeType::DocType) {
+        return "DocType";
+    }
+
     return "Unknown";
 
 }

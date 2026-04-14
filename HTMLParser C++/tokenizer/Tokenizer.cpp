@@ -55,6 +55,7 @@ vector<Token> Tokenizer::tokenize() {
             // test for DOCTYPE
             if (isDOCTYPE()) {
                 isDocType = true;
+                continue;
             }
             
             if (index + 3 < html.size() &&
@@ -87,6 +88,12 @@ vector<Token> Tokenizer::tokenize() {
         if (isDocType) {
             if (character == '>') {
                 isDocType = false;
+                
+                Token token(el, TokenType::DocType);
+                token.index = index;
+                data.push_back(token);
+
+                el.clear();
                 continue;
             }
             el += character;
@@ -193,12 +200,25 @@ const int Tokenizer::size() {
 }
 
 bool Tokenizer::isDOCTYPE() {
-    string DOCTYPE = "DOCTYPE";
+    string DOCTYPE = "!DOCTYPE";
+    string temp = "";
+
+    int i = index + 1;
+    char c = currentChar();
     
-    const char c = currentChar();
-    
-    while() {
+    while(c != ' ') {
+                
+        if (temp == DOCTYPE) {
+            index += DOCTYPE.size();
+            return true;
+        }
         
+        c = html[i];
+        temp += c;
+        
+        i++;
     }
+    
+    return false;
     
 }
