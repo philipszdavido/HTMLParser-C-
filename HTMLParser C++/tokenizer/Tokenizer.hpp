@@ -18,9 +18,17 @@ class Tokenizer {
 
 public:
     Tokenizer(const string& htmlString): html(htmlString) {};
+
     vector<Token> tokenize();
+
     const char nextChar();
     const char prevChar();
+    const char peekChar(int value);
+    const int size();
+    
+    const char currentChar();
+    bool isDOCTYPE();
+
     const string& html;
     int index = -1;
     

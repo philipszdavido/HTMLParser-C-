@@ -16,151 +16,161 @@ vector<Token> Tokenizer::tokenize() {
     bool endTag = false;
     bool isVoid = false;
     bool collectAttribute = false;
+    bool isComment = false;
+    bool isDocType = false;
     
     int endStartTagIndex = -1;
     
     string attribute;
     string el;
-    
-    cout << html << endl;
-    
-    for(const char& character : html) {
         
-        index++;
+    for (index = 0; index <= (size() - 1); index++) {
         
-        if (character == '<') {
-            
-            isTag = true;
-                
-            Token token(el, TokenType::Text);
-            token.index = index;
-            data.push_back(token);
-            el.clear();
+        const char& character = currentChar();
+        
+        if (isComment) {
+                        
+            if (character == '-' &&
+                index + 2 < size() &&
+                peekChar(1) == '-' &&
+                peekChar(2) == '>') {
+                                
+                index += 2;
+                Token token(el, TokenType::Comment);
+                token.index = index;
 
+                data.push_back(token);
+
+                el.clear();
+
+                isComment = false;
+            } else el += character;
+            
             continue;
             
         }
         
+        if (character == '<') {
+            
+            // test for DOCTYPE
+            if (isDOCTYPE()) {
+                isDocType = true;
+            }
+            
+            if (index + 3 < html.size() &&
+                peekChar(1) == '!' &&
+                peekChar(2) == '-' &&
+                peekChar(3) == '-') {
+                
+                isComment = true;
+                index += 3;
+                continue;
+            }
+            
+            isTag = true;
+            
+            if (!el.empty()) {
+                Token token(el, TokenType::Text);
+                token.index = index;
+                data.push_back(token);
+                el.clear();
+            }
+            
+            if (index + 1 < size() && peekChar(1) == '/') {
+                endTag = true;
+                index++;
+            }
+            
+            continue;
+        }
+        
+        if (isDocType) {
+            if (character == '>') {
+                isDocType = false;
+                continue;
+            }
+            el += character;
+            continue;
+        }
+        
         if (isTag) {
             
-            if (!collectAttribute) {
-                if(character == ' ') {
-                    // we collect attributes
-                    collectAttribute = true;
-                    continue;
-                }
+            if (!collectAttribute && character == ' ') {
+                collectAttribute = true;
+                continue;
             }
-                        
-            if (character == '/' && nextChar() == '>') {
+            
+            if (character == '/' &&
+                index + 1 < size() &&
+                peekChar(1) == '>') {
+                
                 isVoid = true;
                 collectAttribute = false;
-
+                index++;
                 continue;
             }
             
             if (collectAttribute) {
-                
                 attribute += character;
                 
-                if(nextChar() == '>') {
+                if (index + 1 < size() && peekChar(1) == '>') {
                     collectAttribute = false;
                 }
                 
                 continue;
-                
             }
-
             
-            if(character == '>') {
-                
+            if (character == '>') {
                 
                 Token token(el, TokenType::Element);
                 token.index = index;
                 
                 AttributeParser attributeParser;
-                const string& attr = attribute;
-                vector<AttributeToken> attributes = attributeParser.parseAttribute(attr);
-
-                attribute = "";
-
+                vector<AttributeToken> attributes =
+                    attributeParser.parseAttribute(attribute);
+                
                 token.attributes = attributes;
-
-                if(isVoid) {
-
+                attribute.clear();
+                
+                if (isVoid) {
                     token.isVoid = true;
                     token.start = true;
                     token.end = true;
-                    
                 } else {
-                                        
                     if (endTag) {
-                        
                         token.end = true;
-                        
-                        if(endStartTagIndex != -1) {
-                            token.endStartTagIndex = endStartTagIndex;
-                        }
-                        
+                        token.endStartTagIndex = endStartTagIndex;
                         endStartTagIndex = -1;
-                        
                     } else {
-                        
                         token.start = true;
-                        
                     }
-                    
                 }
-
-                data.push_back(token);
-                el.clear();
                 
+                data.push_back(token);
+                
+                el.clear();
                 isTag = false;
                 endTag = false;
                 isVoid = false;
                 
                 continue;
-                
             }
             
-            if (character == '/' && prevChar() == '<') {
-                
-                endTag = true;
-
-//                for (int i = static_cast<int>(data.size()) - 1; i >= 0; --i) {
-//                    
-//                    const Token c = data[i];
-//
-//                    if(c.name == el ) {
-//
-//                        endStartTagIndex = c.index;
-//                        break;
-//                        
-//                    }
-//                    
-//                }
-                
-            } else {
-                
-                el += character;
-            }
-            
+            el += character;
             continue;
-            
         }
         
         el += character;
-        
     }
     
-    Token token(el, TokenType::Text);
-    token.index = index;
-
-    data.push_back(token);
-    el.clear();
+    if (!el.empty()) {
+        Token token(el, TokenType::Text);
+        token.index = (int)size();
+        data.push_back(token);
+    }
 
     return data;
-    
-};
+}
 
 const char Tokenizer::nextChar() {
     return html[index + 1];
@@ -168,4 +178,27 @@ const char Tokenizer::nextChar() {
 
 const char Tokenizer::prevChar() {
     return html[index - 1];
+}
+
+const char Tokenizer::peekChar(int value) {
+    return html[index + value];
+}
+
+const char Tokenizer::currentChar() {
+    return html[index];
+}
+
+const int Tokenizer::size() {
+    return (int)html.size();
+}
+
+bool Tokenizer::isDOCTYPE() {
+    string DOCTYPE = "DOCTYPE";
+    
+    const char c = currentChar();
+    
+    while() {
+        
+    }
+    
 }

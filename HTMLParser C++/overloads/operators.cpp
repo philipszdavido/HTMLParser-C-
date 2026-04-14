@@ -14,7 +14,21 @@
 using namespace std;
 
 string tokenTypeToString(const Token& token) {
-    return (token.token == TokenType::Text ? "Text" : "Element");
+    
+    if(token.token == TokenType::Text) {
+        return "Text";
+    }
+
+    if(token.token == TokenType::Element) {
+        return "Element";
+    }
+    
+    if (token.token == TokenType::Comment) {
+        return "Comment";
+    }
+    
+    return "Unknown";
+    
 }
 
 ostream& operator<<(ostream& os, const vector<AttributeToken>& attrs) {
@@ -26,10 +40,27 @@ ostream& operator<<(ostream& os, const vector<AttributeToken>& attrs) {
     return os;
 }
 
+string nodeType(NodeType nodeType) {
+    if (nodeType == NodeType::Element) {
+        return "Element";
+    }
+    
+    if (nodeType == NodeType::Text) {
+        return "Text";
+    }
+    
+    if (nodeType == NodeType::Comment) {
+        return "Comment";
+    }
+    
+    return "Unknown";
+
+}
+
 std::ostream& operator<<(std::ostream& os, const Node& node) {
     
     os << "Node: " << node.name
-    << " | Type: " << (node.nodeType == NodeType::Element ? "Element" : "Text")
+    << " | Type: " << nodeType(node.nodeType)
     << " | Text: \"" << node.textContent << "\""
     << " | Attributes: \"" << node.attributes << "\""
     << endl;

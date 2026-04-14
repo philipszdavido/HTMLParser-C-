@@ -16,6 +16,7 @@
 
 using namespace std;
 
+string nodeType(NodeType nodeType);
 std::string tokenTypeToString(const Token& token);
 std::ostream& operator<<(std::ostream& os, const std::vector<AttributeToken>& attrs);
 std::ostream& operator<<(std::ostream& os, const Token& token);

@@ -10,7 +10,9 @@
 
 enum class TokenType {
     Element,
-    Text
+    Text,
+    Comment,
+    DocType
 };
 
 #endif /* TokenType_h */

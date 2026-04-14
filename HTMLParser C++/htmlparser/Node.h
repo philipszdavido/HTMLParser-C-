@@ -12,7 +12,9 @@ using namespace std;
 
 enum class NodeType {
     Text,
-    Element
+    Element,
+    Comment,
+    DocType
 };
 
 class Node {
