@@ -12,9 +12,10 @@
 
 using namespace std;
 
-vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
+vector<Node*> HTMLParser::parse(Node* parent, const vector<Token>& tokens) {
         
-    vector<Node> nodes;
+    vector<Node*> nodes;
+    Node* prevNode = nullptr;
     
     for (int i = 0; i < tokens.size(); ++i) {
         
@@ -22,14 +23,36 @@ vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
         
         if(token.token == TokenType::Text) {
             
-            nodes.push_back(Node("", NodeType::Text, token.name));
+            Node* node = createNode("", NodeType::Text, token.name);
+            node->parent = parent;
+            
+            node->prev = prevNode;
+            
+            if (prevNode != nullptr) {
+                
+                prevNode->next = node;
+                
+                prevNode = node;
+                
+            }
+            
+            nodes.push_back(node);
             
         } else if (token.token == TokenType::Element) {
             
             if(token.isVoid) {
                 
-                Node voidElement = Node(token.name, NodeType::Element, "");
-                voidElement.attributes = token.attributes;
+                Node* voidElement = createNode(token.name, NodeType::Element, "");
+                voidElement->attributes = token.attributes;
+                voidElement->parent = parent;
+
+                voidElement->prev = prevNode;
+                
+                if (prevNode != nullptr) {
+                    prevNode->next = voidElement;
+                    prevNode = voidElement;
+                }
+                
                 nodes.push_back(voidElement);
                 continue;
                 
@@ -37,10 +60,20 @@ vector<Node> HTMLParser::parse(const vector<Token>& tokens) {
             
             // search if element has children
             const vector<Token>& children = getTokenChildren(tokens, token.name, i + 1);
-            Node node = Node(token.name, NodeType::Element, "");
-            node.attributes = token.attributes;
-            
-            node.children = parse(children);
+            Node* node = createNode(token.name, NodeType::Element, "");
+            node->attributes = token.attributes;
+            node->parent = parent;
+
+            node->prev = prevNode;
+
+            if (prevNode != nullptr) {
+                
+                prevNode->next = node;
+                prevNode = node;
+                
+            }
+
+            node->children = parse(node, children);
             
             nodes.push_back(node);
             
@@ -85,4 +118,9 @@ const vector<Token> HTMLParser::getTokenChildren(const vector<Token>& tokens, co
 
     return children;
     
+}
+
+
+Node* HTMLParser::createNode(const string name, const NodeType type, const string textContent) {
+    return new Node(name, type, textContent);
 }

@@ -18,10 +18,11 @@ using namespace std;
 class HTMLParser {
     
 public:
-    vector<Node> parse(const vector<Token>& tokens);
+    vector<Node*> parse(Node* parent, const vector<Token>& tokens);
     
 private:
     const vector<Token> getTokenChildren(const vector<Token>& tokens, const string& name, int index);
+    Node* createNode(const string name, const NodeType type, const string textContent);
 
 };
 

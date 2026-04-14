@@ -24,8 +24,12 @@ public:
     const string name;
     NodeType nodeType;
     const string textContent;
-    vector<Node> children;
+    vector<Node*> children;
     vector<AttributeToken> attributes;
+    
+    Node* next;
+    Node* prev;
+    Node* parent;
 };
 
 #endif /* Node_h */

@@ -6,7 +6,7 @@
 //
 
 #include "Tokenizer.hpp"
-#include "../token_attribute_parser/AttributeParser.hpp"
+#include "../token_attribute_parser/AttributeParser/AttributeParser.hpp"
 
 vector<Token> Tokenizer::tokenize() {
     

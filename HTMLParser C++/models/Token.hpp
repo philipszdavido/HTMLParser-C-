@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "TokenType.h"
-#include "../token_attribute_parser/AttributeToken.hpp"
+#include "../token_attribute_parser/AttributeToken/AttributeToken.hpp"
 
 using namespace std;
 
