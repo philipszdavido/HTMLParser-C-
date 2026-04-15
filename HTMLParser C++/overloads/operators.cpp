@@ -94,18 +94,16 @@ ostream& operator<<(ostream& os, const Token& token) {
 
 void printNode(const Node* node, int depth = 0) {
     
-    // Indent based on depth
     for (int i = 0; i < depth; i++) {
         cout << "  ";
     }
 
-    // Print node info
     cout << "Node: " << node->name
     << " | Type: " << nodeType(node->nodeType)
          << " | Text: \"" << node->textContent << "\""
+    << " | Attributes: \"" << node->attributes << "\""
          << endl;
 
-    // Print children
     for (const Node* child : node->children) {
         printNode(child, depth + 1);
     }

@@ -8,6 +8,18 @@
 #include "Tokenizer.hpp"
 #include "../token_attribute_parser/AttributeParser/AttributeParser.hpp"
 
+enum State {
+    IsTagOpen,
+    IsComment,
+    IsDocType
+};
+
+const char GT = '>';
+const char LT = '<';
+const char HYPHEN = '-';
+const char FORWARD_SLASH = '/';
+const char EMPTY = ' ';
+
 vector<Token> Tokenizer::tokenize() {
     
     vector<Token> data;
@@ -30,10 +42,10 @@ vector<Token> Tokenizer::tokenize() {
         
         if (isComment) {
                         
-            if (character == '-' &&
+            if (character == HYPHEN &&
                 index + 2 < size() &&
-                peekChar(1) == '-' &&
-                peekChar(2) == '>') {
+                peekChar(1) == HYPHEN &&
+                peekChar(2) == GT) {
                                 
                 index += 2;
                 Token token(el, TokenType::Comment);
@@ -50,7 +62,7 @@ vector<Token> Tokenizer::tokenize() {
             
         }
         
-        if (character == '<') {
+        if (character == LT && !isTag && !isComment && !isDocType) {
             
             // test for DOCTYPE
             if (isDOCTYPE()) {
@@ -60,8 +72,8 @@ vector<Token> Tokenizer::tokenize() {
             
             if (index + 3 < html.size() &&
                 peekChar(1) == '!' &&
-                peekChar(2) == '-' &&
-                peekChar(3) == '-') {
+                peekChar(2) == HYPHEN &&
+                peekChar(3) == HYPHEN) {
                 
                 isComment = true;
                 index += 3;
@@ -77,7 +89,7 @@ vector<Token> Tokenizer::tokenize() {
                 el.clear();
             }
             
-            if (index + 1 < size() && peekChar(1) == '/') {
+            if (index + 1 < size() && peekChar(1) == FORWARD_SLASH) {
                 endTag = true;
                 index++;
             }
@@ -86,7 +98,7 @@ vector<Token> Tokenizer::tokenize() {
         }
         
         if (isDocType) {
-            if (character == '>') {
+            if (character == GT) {
                 isDocType = false;
                 
                 Token token(el, TokenType::DocType);
@@ -102,14 +114,14 @@ vector<Token> Tokenizer::tokenize() {
         
         if (isTag) {
             
-            if (!collectAttribute && character == ' ') {
+            if (!collectAttribute && character == EMPTY) {
                 collectAttribute = true;
                 continue;
             }
             
-            if (character == '/' &&
+            if (character == FORWARD_SLASH &&
                 index + 1 < size() &&
-                peekChar(1) == '>') {
+                peekChar(1) == GT) {
                 
                 isVoid = true;
                 collectAttribute = false;
@@ -120,14 +132,14 @@ vector<Token> Tokenizer::tokenize() {
             if (collectAttribute) {
                 attribute += character;
                 
-                if (index + 1 < size() && peekChar(1) == '>') {
+                if (index + 1 < size() && peekChar(1) == GT) {
                     collectAttribute = false;
                 }
                 
                 continue;
             }
             
-            if (character == '>') {
+            if (character == GT) {
                 
                 Token token(el, TokenType::Element);
                 token.index = index;
@@ -206,17 +218,22 @@ bool Tokenizer::isDOCTYPE() {
     int i = index + 1;
     char c = currentChar();
     
-    while(c != ' ') {
-                
-        if (temp == DOCTYPE) {
-            index += DOCTYPE.size();
-            return true;
+    int count = 0;
+    
+    while(count != DOCTYPE.size()) {
+                        
+        if (i >= size()) {
+            break;
         }
         
         c = html[i];
         temp += c;
         
-        i++;
+        count++;
+    }
+    
+    if (temp == DOCTYPE) {
+        return true;
     }
     
     return false;

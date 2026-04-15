@@ -30,7 +30,7 @@ vector<AttributeToken> AttributeParser::parseAttribute(const string& attributeSt
         
         const char character = attributeString[i];
                 
-        if(isValue) {
+        if (isValue) {
 
             if (start) {
 
@@ -72,24 +72,9 @@ vector<AttributeToken> AttributeParser::parseAttribute(const string& attributeSt
             isValue = true;
             continue;
             
-        }
-        
-        if (character == ' ') {
-            
-            AttributeToken attrToken(el, "");
-            attributeTokens.push_back(attrToken);
-
-            el = "";
-            continue;
-            
-        }
-        
-        el += character;
+        } else el += character;
         
     }
-
-    AttributeToken attrToken(el, "");
-    attributeTokens.push_back(attrToken);
     
     el = "";
     
